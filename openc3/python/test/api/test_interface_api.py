@@ -1,4 +1,4 @@
-# Copyright 2023 OpenC3, Inc.
+# Copyright 2025 OpenC3, Inc.
 # All Rights Reserved.
 #
 # This program is free software; you can modify and/or redistribute it
@@ -47,15 +47,13 @@ class TestInterfaceApi(unittest.TestCase):
                 pass
 
             def read_interface(self):
-                time.sleep(0.05)
-                return b"", ""
+                time.sleep(0.01)
+                return (b"\x01\x02\x03\x04", None)
 
             def interface_cmd(self, cmd_name, *cmd_params):
                 TestInterfaceApi.interface_cmd_data[cmd_name] = cmd_params
 
-            def protocol_cmd(
-                self, cmd_name, *cmd_params, read_write="READ_WRITE", index=-1
-            ):
+            def protocol_cmd(self, cmd_name, *cmd_params, read_write="READ_WRITE", index=-1):
                 TestInterfaceApi.protocol_cmd_data[cmd_name] = cmd_params
 
             # Allow the stubbed InterfaceModel.get_model to call build()
@@ -77,7 +75,7 @@ class TestInterfaceApi(unittest.TestCase):
         self.im = InterfaceMicroservice("DEFAULT__INTERFACE__INST_INT")
         self.im_thread = threading.Thread(target=self.im.run)
         self.im_thread.start()
-        time.sleep(0.01)  # Allow the thread to run
+        time.sleep(0.02)  # Allow the thread to run
 
     def tearDown(self):
         self.im.shutdown()
